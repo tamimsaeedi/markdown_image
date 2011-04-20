@@ -4,3 +4,4 @@ package = "Input filters"
 core = 7.x
 dependencies[] = markdown
 dependencies[] = image
+files[] = MarkdownImageParser.inc
