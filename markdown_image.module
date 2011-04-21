@@ -102,16 +102,21 @@ function markdown_image_entity_view_alter(&$build) {
     
     foreach ($items as $key => $item) {
       preg_match_all('@\[markdown_image:(.+?)\]@', $item['value'], $matches);
-      if (isset($matches[1][0])) {
-        list($entity_type, $entity_id, $field_name, $index, $alt_text) = explode(':', $matches[1][0]);
+      if (!isset($matches[1][0])) {
+        return;
+      }
+
+      $text = $build[$item_field_name][$key]['#markup'];
+      foreach ($matches[1] as $match_key => $match) {
+        list($entity_type, $entity_id, $field_name, $index, $alt_text) = explode(':', $match);
         
         if (!isset($build[$field_name])) {
           $replace = '';
         }
         else {
           $options = array(
-            'style_name' => $build[$field_name][$key]['#image_style'],
-            'path' => $build[$field_name][$key]['#item']['uri'],
+            'style_name' => $build[$field_name][$index]['#image_style'],
+            'path' => $build[$field_name][$index]['#item']['uri'],
             'alt' => $alt_text,
             'title' => $alt_text,
             'attributes' => array(
@@ -123,11 +128,10 @@ function markdown_image_entity_view_alter(&$build) {
           );
           $replace = theme('image_style', $options);
         }
-
-        $build[$item_field_name][$key]['#markup'] = str_replace($matches[0][0], $replace, $build[$item_field_name][$key]['#markup']);
+        $text = str_replace($matches[0][$match_key], $replace, $text);
       }
+      $build[$item_field_name][$key]['#markup'] = $text;
     }
-
   }
 }
 
