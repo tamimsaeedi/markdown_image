@@ -79,9 +79,14 @@ function markdown_image_field_attach_form($entity_type, $entity, &$form, &$form_
 function markdown_image_entity_view_alter(&$build) {
   $bundle = $build['#bundle'];
   $entity_type = $build['#entity_type'];
-  $entity = $build['#' . $entity_type];
   $langcode = $build['#language'];
-  
+
+  if (!isset($build['#' . $entity_type])) {
+    return;
+  }
+
+  $entity = $build['#' . $entity_type];
+
   foreach ($build as $property) {
     if (!(is_array($property) && isset($property['#field_name']))) {
       continue;
