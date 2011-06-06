@@ -120,18 +120,34 @@ function markdown_image_entity_view_alter(&$build) {
         }
         else {
           $options = array(
-            'style_name' => $build[$field_name][$index]['#image_style'],
             'path' => $build[$field_name][$index]['#item']['uri'],
             'alt' => $alt_text,
             'title' => $alt_text,
+            'getsize' => TRUE,
             'attributes' => array(
               'class' => array(
                 'field-' . $field_name,
-                $index % 2 == 0 ? 'even' : 'odd'
+                $index % 2 == 0 ? 'even' : 'odd',
               ),
             ),
           );
-          $replace = theme('image_style', $options);
+
+          // Colorbox support.
+          if (isset($build[$field_name][$index]['#colorbox_node_style'])) {
+            $options['style_name'] = $build[$field_name][$index]['#colorbox_node_style'];
+            $options['image'] = $options;
+
+            $scheme = file_uri_scheme($options['image']['path']);
+            $files_directory = variable_get('file_' . $scheme . '_path', 'sites/default/files');
+            $options['path'] = $files_directory. '/' . file_uri_target($options['image']['path']);
+
+            $theme_name = 'colorbox_imagefield';
+          }
+          else {
+            $options['style_name'] = $build[$field_name][$index]['#image_style'];
+            $theme_name = 'image_style';
+          }
+          $replace = theme($theme_name, $options);
         }
         $text = str_replace($matches[0][$match_key], $replace, $text);
       }
