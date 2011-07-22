@@ -54,6 +54,6 @@ class MarkdownImageFieldParser extends Markdown_Parser {
       'index' => $shortcut[1] - 1,
       'alt' => $matches[2],
     );
-    return '[' . implode(':', $parts)  . ']';
+    return sprintf('[%s]', implode(':', $parts));
   }
 }

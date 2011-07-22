@@ -191,7 +191,7 @@ function _markdown_image_revert_tag($matches) {
   $alt_text = $attributes[4];
   $field_name = $attributes[2];
   $index = $attributes[3] + 1;
-  return '![' . $alt_text . '](' . $field_name . ':' . $index . ')';
+  return sprintf('![%s](%s:%s)', $alt_text, $field_name, $index);
 }
 
 function markdown_image_filter_markdown_image_process($text, $filter, $format, $langcode, $cache, $cache_id) {
