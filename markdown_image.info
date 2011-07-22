@@ -1,4 +1,0 @@
-name = Markdown filter
-description = Provides shorthand to allow easy use of image fields in Markdown.
-package = "Input filters"
-core = 7.x
